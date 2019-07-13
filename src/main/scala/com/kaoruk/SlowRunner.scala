@@ -26,4 +26,5 @@ object SlowRunner extends App {
   })
     .to(Sink.ignore)
     .run()
+    .onComplete(_ => system.terminate())
 }

@@ -1,6 +1,5 @@
 package com.kaoruk
 
-import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Flow, RunnableGraph, Sink, Source}

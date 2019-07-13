@@ -38,6 +38,14 @@ object Runner extends App {
     .map(_.toString)
     .runWith(Utils.lineSink("factorial2.txt"))
 
+  tasks += factorials
+    .map(_.toString())
+    .via({
+      Flow[String].map(_.toString)
+    })
+    .toMat(Sink.ignore)(Keep.right)
+    .run()
+
 //  tasks += factorials
 //      .zipWith(Source(0 to 100))((num, idx) => s"$idx! = $num")
 //      .throttle(1, 1.second)

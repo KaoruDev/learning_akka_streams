@@ -8,20 +8,18 @@ import scala.concurrent.{Future, Promise}
 import scala.concurrent.duration._
 import scala.util.Success
 
+import com.kaoruk.elements.{Coal, Diamond, FlawedDiamond}
+
 object LevelOneRunner extends App {
   implicit val system = ActorSystem("KaoruSlowStreams")
   implicit val ec = system.dispatcher
   implicit val materializer = ActorMaterializer()
 
-  case class Coal()
-  case class FlawedDiamond()
-  case class Diamond()
-
   val source: Source[Coal, Promise[Option[Coal]]] = Source.maybe[Coal]
   val flow: Flow[Coal, FlawedDiamond, NotUsed] = Flow[Coal]
     .throttle(1, 500.millisecond)
-    .map(i => FlawedDiamond())
-  val sink: Sink[FlawedDiamond, Future[Diamond]] = Sink.fold(Diamond())((_, _) => Diamond())
+    .map(i => FlawedDiamond(i.id))
+  val sink: Sink[FlawedDiamond, Future[Diamond]] = Sink.fold(Diamond(0))((_, _) => Diamond(0))
 
   // A runnable graph that will throttle each element for 500, will not start until Promise is completed
   // Note .to will always keep left
